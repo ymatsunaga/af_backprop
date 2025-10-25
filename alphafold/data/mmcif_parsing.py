@@ -20,7 +20,21 @@ from typing import Any, Mapping, Optional, Sequence, Tuple
 
 from absl import logging
 from Bio import PDB
-from Bio.Data import SCOPData
+try:
+  from Bio.Data import SCOPData as _SCOP
+  _PROT_3TO1 = _SCOP.protein_letters_3to1
+except Exception:
+  from Bio.Data import IUPACData as _IUPAC
+  _PROT_3TO1 = {k.upper(): v for k, v in _IUPAC.protein_letters_3to1.items()}
+  _PROT_3TO1.update({
+      "MSE": "M",
+      "SEC": "C",
+      "PYL": "K",
+      "ASX": "X",
+      "GLX": "X",
+      "XLE": "X",
+      "UNK": "X",
+  })
 
 # Type aliases:
 ChainId = str
